@@ -1,18 +1,14 @@
 import * as React from 'react';
 
-interface Props {}
-
 interface State {
   og: number;
   fg: number;
-  abv: number;
 };
 
-export default class CalcForm extends React.Component<Props, State> {
+export default class CalcForm extends React.Component<{}, State> {
   state: State = {
     og: 1.055,
-    fg: 1.015,
-    abv: 5.25
+    fg: 1.015
   };
 
   handleChange = (e: React.FormEvent<HTMLInputElement>) => {

@@ -5,7 +5,7 @@ Check out the demo at [https://brianmccoy.net/abv-calculator](https://brianmccoy
 
 ### Built with React and TypeScript 
 
-###Installation
+### Installation
 ---
 
 1. Clone this repo.

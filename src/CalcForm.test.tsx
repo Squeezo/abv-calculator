@@ -2,27 +2,63 @@ import * as React from 'react';
 import { shallow } from 'enzyme';
 import CalcForm  from './CalcForm';
 import { GetAbv } from './CalcForm';
+import { exact } from 'prop-types';
 
 describe("CalcForm Component", ()=> {
   it('CalcForm displays the default value', () => {
-  const calcForm = shallow(<CalcForm />);
-  let v = calcForm.find('.abv');
-  expect(v.text()).toEqual('5.25%');
+    const calcForm = shallow(<CalcForm />);
+    let v = calcForm.find('.abv');
+    expect(v.text()).toEqual('5.25%');
   });
 
-  /*
+  it('displays the appropriate message when og input is too high',()=>{
+    const calcForm = shallow(<CalcForm />);
+    calcForm.find('#og').simulate('change', {
+      currentTarget: { name: 'og', value: 2.00}
+    });
+    
+    expect(calcForm.find('.message').text()).toMatch("Gravity must be 1.999 or less");
+  });
+  
+  it('displays the appropriate message when og input is too low',()=>{
+    const calcForm = shallow(<CalcForm />);
+    calcForm.find('#og').simulate('change', {
+      currentTarget: { name: 'og', value: 0.99}
+    });
+    
+    expect(calcForm.find('.message').text()).toMatch("Gravity must be greater than 0.999");
+  });
 
-  validate that input recieves numbers
-  validate that input min is 1.000
-  validate that input max is 1.999
-  validate that input length < 5
+  it('displays the appropriate message when fg input is too high',()=>{
+    const calcForm = shallow(<CalcForm />);
+    calcForm.find('#fg').simulate('change', {
+      currentTarget: { name: 'fg', value: 2.00}
+    });
+    
+    expect(calcForm.find('.message').text()).toMatch("Gravity must be 1.999 or less");
+  });
+  
+  it('displays the appropriate message when fg input is too low',()=>{
+    const calcForm = shallow(<CalcForm />);
+    calcForm.find('#fg').simulate('change', {
+      currentTarget: { name: 'fg', value: 0.99}
+    });
+    
+    expect(calcForm.find('.message').text()).toMatch("Gravity must be greater than 0.999");
+  });
 
-
-  */ 
+  it('reset the error message when a valid input is entered',()=>{
+    const calcForm = shallow(<CalcForm />);
+    calcForm.find('#fg').simulate('change', {
+      currentTarget: { name: 'fg', value: 1.008}
+    });
+    
+    expect(calcForm.find('.message').text()).toMatch('');
+  });
 
   it('renders as expected', ()=> {
-  const calcForm = shallow(<CalcForm />);  
-  expect(calcForm).toMatchSnapshot();
+    const calcForm = shallow(<CalcForm />);  
+    expect(calcForm).toMatchSnapshot();
   })
 });
 

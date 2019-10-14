@@ -3,21 +3,49 @@ import * as React from 'react';
 interface State {
   og: number;
   fg: number;
+  message: string;
 };
 
 export default class CalcForm extends React.Component<{}, State> {
   state: State = {
     og: 1.055,
-    fg: 1.015
+    fg: 1.015,
+    message: ''
   };
 
+  validate = (value: number) => {
+    if(!value) {
+      return false;
+    }
+
+    if(value < 1) {
+      this.setState(Object.assign({}, this.state, { message: "Gravity must be greater than 0.999" } ));
+      return false;
+    }
+
+    if(value > 1.999) {
+      this.setState(Object.assign({}, this.state, { message: "Gravity must be 1.999 or less" } ));
+      return false;
+    }
+
+    return true;
+
+  }
+
   handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+      
       let name= e.currentTarget.name;
-      let value = e.currentTarget.value;
-      this.setState(Object.assign({}, this.state, { [name]: Number.parseFloat(value) } ));
+      let value = Number.parseFloat(e.currentTarget.value);
+
+      let valid = this.validate(value)
+
+      if(valid) {
+        this.setState(Object.assign({}, this.state, { [name]: value, message: "" } ));
+      }
   };
 
   render () {
+
     return (
       <fieldset>
         <legend>Enter your gravity values below:</legend>
@@ -32,10 +60,14 @@ export default class CalcForm extends React.Component<{}, State> {
             </div>
            
           </div>
+        <div className='display'>
           <div className='abv-display'>
             <span>ABV: </span>
             <span className='abv'>{GetAbv({ og: this.state.og, fg: this.state.fg })}%</span>
           </div>
+          <span className='message'>{this.state.message}</span>
+        </div>
+
           
         </div>
 

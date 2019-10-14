@@ -44,13 +44,25 @@ legend {
   
 }
 
+.display {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  
+}
+
+.message {
+  font-size:.75em;
+  color:#f00;
+}
+
 .submit {
   display: flex;
   justify-content: flex-end;
 }
 
 .abv-display {
-  text-align: left;
+  text-align: right;
   margin: 0;
 }
 

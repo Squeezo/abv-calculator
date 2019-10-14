@@ -31,23 +31,13 @@ legend {
   border-radius: 5px;
 }
 
-.form {
+.form  {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-.fields {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  
-}
-
-.display {
-  display: flex;
-  flex-direction: column;
-  align-content: flex-end;
-  
+.form > div {
+  margin:20px;
 }
 
 .message {
@@ -55,14 +45,10 @@ legend {
   color:#f00;
 }
 
-.submit {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .abv-display {
-  text-align: right;
-  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
 .abv {
@@ -78,4 +64,14 @@ input[type=number] {
 button {
   width:10vw;
   height:44px;
+}
+
+@media (max-width : 600px) {
+  .abv-display {
+    align-items: flex-end;
+  }
+
+  .abv-display > .label {
+    padding-bottom:4px;
+  }
 }

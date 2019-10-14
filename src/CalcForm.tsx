@@ -50,25 +50,17 @@ export default class CalcForm extends React.Component<{}, State> {
       <fieldset>
         <legend>Enter your gravity values below:</legend>
         <div className='form'>
-          <div className='fields'>
-            <div>
-                <label htmlFor='og'>OG:</label>
-                <input name='og' id='og' type='number' step={0.001} min={1.00} max={1.999} value={this.state.og} onChange={this.handleChange} />
-            </div>
-            <div>
-                <label htmlFor='fg'>FG: </label><input name='fg' id='fg' type='number' step={0.001} value={this.state.fg} onChange={this.handleChange} />
-            </div>
-           
+          <div>
+              <label htmlFor='og'>OG:</label>
+              <input name='og' id='og' type='number' step={0.001} min={1.00} max={1.999} value={this.state.og} onChange={this.handleChange} />
           </div>
-        <div className='display'>
+          <div>
+              <label htmlFor='fg'>FG: </label><input name='fg' id='fg' type='number' step={0.001} value={this.state.fg} onChange={this.handleChange} />
+          </div>
           <div className='abv-display'>
-            <span>ABV: </span>
+            <span className='label'>ABV: </span>
             <span className='abv'>{GetAbv({ og: this.state.og, fg: this.state.fg })}%</span>
-          </div>
-          <span className='message'>{this.state.message}</span>
-        </div>
-
-          
+          </div>           
         </div>
 
 

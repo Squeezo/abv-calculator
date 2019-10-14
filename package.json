@@ -1,6 +1,8 @@
 {
   "name": "abv-calculator",
-  "version": "0.1.0",
+  "homepage": "https://brianmccoy.net/abv-calculator",
+  "version": "1.0.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@types/enzyme": "^3.10.3",

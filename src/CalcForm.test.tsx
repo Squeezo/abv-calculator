@@ -1,87 +1,59 @@
-import * as React from 'react';
-import { shallow } from 'enzyme';
-import CalcForm  from './CalcForm';
-import { GetAbv } from './CalcForm';
-import { exact } from 'prop-types';
+import { describe, expect, it } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import CalcForm from './CalcForm';
 
-describe("CalcForm Component", ()=> {
-  it('CalcForm displays the default value', () => {
-    const calcForm = shallow(<CalcForm />);
-    let v = calcForm.find('.abv');
-    expect(v.text()).toEqual('5.25%');
+const setup = () => {
+  render(<CalcForm />);
+  return {
+    user: userEvent.setup(),
+    og: screen.getByLabelText('OG:'),
+    fg: screen.getByLabelText('FG:'),
+    message: () => document.querySelector('.message')!,
+  };
+};
+
+const type = async (user: ReturnType<typeof userEvent.setup>, el: HTMLElement, text: string) => {
+  await user.clear(el);
+  await user.type(el, text);
+};
+
+describe('CalcForm', () => {
+  it('displays the default ABV', () => {
+    setup();
+    expect(screen.getByText('5.25%')).toBeInTheDocument();
   });
 
-  it('displays the appropriate message when og input is too high',()=>{
-    const calcForm = shallow(<CalcForm />);
-    calcForm.find('#og').simulate('change', {
-      currentTarget: { name: 'og', value: 2.00}
-    });
-    
-    expect(calcForm.find('.message').text()).toMatch("Gravity must be 1.999 or less");
-  });
-  
-  it('displays the appropriate message when og input is too low',()=>{
-    const calcForm = shallow(<CalcForm />);
-    calcForm.find('#og').simulate('change', {
-      currentTarget: { name: 'og', value: 0.99}
-    });
-    
-    expect(calcForm.find('.message').text()).toMatch("Gravity must be greater than 0.999");
+  it('recalculates when a value changes', async () => {
+    const { user, og, fg } = setup();
+    await type(user, og, '1.056');
+    await type(user, fg, '1.015');
+    expect(screen.getByText('5.38%')).toBeInTheDocument();
   });
 
-  it('displays the appropriate message when fg input is too high',()=>{
-    const calcForm = shallow(<CalcForm />);
-    calcForm.find('#fg').simulate('change', {
-      currentTarget: { name: 'fg', value: 2.00}
-    });
-    
-    expect(calcForm.find('.message').text()).toMatch("Gravity must be 1.999 or less");
-  });
-  
-  it('displays the appropriate message when fg input is too low',()=>{
-    const calcForm = shallow(<CalcForm />);
-    calcForm.find('#fg').simulate('change', {
-      currentTarget: { name: 'fg', value: 0.99}
-    });
-    
-    expect(calcForm.find('.message').text()).toMatch("Gravity must be greater than 0.999");
+  it.each([
+    ['og', '2', 'Gravity must be 1.999 or less'],
+    ['og', '0.99', 'Gravity must be greater than 0.999'],
+    ['fg', '2', 'Gravity must be 1.999 or less'],
+    ['fg', '0.99', 'Gravity must be greater than 0.999'],
+  ] as const)('shows a message when %s is %s', async (field, value, expected) => {
+    const { user, message, ...inputs } = setup();
+    await type(user, inputs[field], value);
+    expect(message()).toHaveTextContent(expected);
+    expect(screen.getByText('0%')).toBeInTheDocument();
   });
 
-  it('reset the error message when a valid input is entered',()=>{
-    const calcForm = shallow(<CalcForm />);
-    calcForm.find('#fg').simulate('change', {
-      currentTarget: { name: 'fg', value: 1.008}
-    });
-    
-    expect(calcForm.find('.message').text()).toMatch('');
+  it('clears the message when a valid value is entered', async () => {
+    const { user, fg, message } = setup();
+    await type(user, fg, '2');
+    expect(message()).not.toBeEmptyDOMElement();
+    await type(user, fg, '1.008');
+    expect(message()).toBeEmptyDOMElement();
   });
 
-  it('renders as expected', ()=> {
-    const calcForm = shallow(<CalcForm />);  
-    expect(calcForm).toMatchSnapshot();
-  })
-});
-
-describe('GetAbv function', () => {
-  it('returns the correct value for valid inputs', () => {
-    expect(GetAbv({ og: 1.056, fg: 1.015 })).toEqual(5.38);
+  it('lets a field be emptied while editing', async () => {
+    const { user, og } = setup();
+    await user.clear(og);
+    expect(og).toHaveValue(null);
   });
-
-  it('gracefully handles nulls', () => {
-    expect(GetAbv({ fg: 1.015 })).toEqual(0);
-    expect(GetAbv({ og: 1.058 })).toEqual(0);
-  });
-
-  it('block values under 1.000',()=>{
-    expect(GetAbv({ og: 1.056, fg: 0.9999 })).toEqual(0);
-    expect(GetAbv({ og: 0.9999, fg: 1.008 })).toEqual(0);
-    expect(GetAbv({ og: 0.9999, fg: 0.9999 })).toEqual(0);
-  });
-
-  it('block values over 1.999',()=>{
-    expect(GetAbv({ og: 1.056, fg: 2.000 })).toEqual(0);
-    expect(GetAbv({ og: 2.000, fg: 1.008 })).toEqual(0);
-    expect(GetAbv({ og: 2.000, fg: 2.000 })).toEqual(0);
-  });
-
 });

@@ -1,43 +1,35 @@
 {
   "name": "abv-calculator",
   "homepage": "https://brianmccoy.net/abv-calculator",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "MIT",
   "private": true,
-  "dependencies": {
-    "@types/enzyme": "^3.10.3",
-    "@types/jest": "24.0.18",
-    "@types/node": "12.7.12",
-    "@types/react": "16.9.5",
-    "@types/react-dom": "16.9.1",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.15.1",
-    "enzyme-to-json": "^3.4.2",
-    "js-test": "^0.0.1",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "react-scripts": "3.2.0",
-    "typescript": "3.6.4"
+  "type": "module",
+  "engines": {
+    "node": ">=22"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jsdom": "^29.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   }
 }
